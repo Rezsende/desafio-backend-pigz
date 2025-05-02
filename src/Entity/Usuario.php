@@ -29,6 +29,10 @@ class Usuario
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $dataAtualizacao;
 
+    // Relacionamento: um usuário pode ter várias listas
+    #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Lista::class)]
+    private $listas;
+
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
@@ -88,5 +92,15 @@ class Usuario
     public function getDataAtualizacao(): \DateTimeInterface
     {
         return $this->dataAtualizacao;
+    }
+    public function getListas()
+    {
+        return $this->listas;
+    }
+
+    public function addLista(Lista $lista): self
+    {
+        $this->listas[] = $lista;
+        return $this;
     }
 }
