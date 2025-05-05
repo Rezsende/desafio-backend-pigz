@@ -12,6 +12,40 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UsuarioController extends AbstractController
 {
+    #[Route('/api/usuarios/{adminId}', name: 'criar_usuario', methods: ['POST'])]
+    public function criarUsuario(
+        int $adminId,
+        Request $request,
+        EntityManagerInterface $em
+    ): JsonResponse {
+       
+        $admin = $em->getRepository(Usuario::class)->find($adminId);
+
+        if (!$admin || $admin->getNivelAcesso() !== 'admin') {
+            return new JsonResponse(['erro' => 'Acesso negado. Apenas administradores podem cadastrar usuários.'], 403);
+        }
+
+      
+        $dados = json_decode($request->getContent(), true);
+
+        
+        if (empty($dados['email']) || empty($dados['senha']) || empty($dados['nivelAcesso'])) {
+            return new JsonResponse(['erro' => 'Dados incompletos.'], 400);
+        }
+
+       
+        $novoUsuario = new Usuario();
+        $novoUsuario->setEmail($dados['email']);
+        $novoUsuario->setSenha($dados['senha']);
+        $novoUsuario->setNivelAcesso($dados['nivelAcesso']);
+
+        
+        $em->persist($novoUsuario);
+        $em->flush();
+
+        return new JsonResponse(['mensagem' => 'Usuário criado com sucesso.'], 201);
+    }
+
     #[Route('/api/usuarios/{id}/listas', name: 'criar_lista', methods: ['POST'])]
     public function criarLista(
         int $id,
