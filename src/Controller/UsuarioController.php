@@ -45,4 +45,25 @@ class UsuarioController extends AbstractController
             'listaId' => $lista->getId(),
         ], 201);
     }
+
+    #[Route('/api/listas/{id}', name: 'delete_lista', methods: ['DELETE'])]
+    public function deleteLista(
+        int $id,
+        EntityManagerInterface $em
+    ): JsonResponse {
+      
+        $lista = $em->getRepository(Lista::class)->find($id);
+
+       
+        if (!$lista) {
+            return new JsonResponse(['erro' => 'Lista não encontrada.'], 404);
+        }
+
+      
+        $em->remove($lista);
+        $em->flush();
+
+        
+        return new JsonResponse(['mensagem' => 'Lista excluída com sucesso.'], 200);
+    }
 }

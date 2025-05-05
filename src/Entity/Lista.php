@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ListaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: ListaRepository::class)]
 class Lista
@@ -20,7 +22,14 @@ class Lista
     #[ORM\JoinColumn(nullable: false)]
     private ?Usuario $usuario = null;
 
-  
+    #[ORM\OneToMany(mappedBy: 'lista', targetEntity: Item::class, cascade: ['remove'], orphanRemoval: true)]
+    private Collection $itens;
+
+    public function __construct()
+    {
+        $this->itens = new ArrayCollection();  
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -48,4 +57,14 @@ class Lista
         return $this;
     }
 
+    public function getItens(): Collection
+    {
+        return $this->itens;
+    }
+
+    public function setItens(Collection $itens): self
+    {
+        $this->itens = $itens;
+        return $this;
+    }
 }
