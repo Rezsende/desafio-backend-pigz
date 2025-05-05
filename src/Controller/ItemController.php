@@ -72,4 +72,25 @@ final class ItemController extends AbstractController
        
         return new JsonResponse(['mensagem' => 'Item excluído com sucesso.'], 200);
     }
+
+    #[Route('/api/items/{id}/concluida', name: 'update_item_concluida', methods: ['PATCH'])]
+    public function updateConcluida(int $id, EntityManagerInterface $em): JsonResponse
+    {
+        
+        $item = $em->getRepository(Item::class)->find($id);
+
+       
+        if (!$item) {
+            return new JsonResponse(['erro' => 'Item não encontrado.'], 404);
+        }
+
+      
+        $item->setConcluida(true);
+
+        
+        $em->flush();
+
+       
+        return new JsonResponse(['mensagem' => 'Item concluído com sucesso.'], 200);
+    }
 }
