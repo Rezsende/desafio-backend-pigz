@@ -20,8 +20,7 @@ class Lista
     #[ORM\JoinColumn(nullable: false)]
     private ?Usuario $usuario = null;
 
-    #[ORM\OneToMany(mappedBy: 'lista', targetEntity: Item::class, orphanRemoval: true)]
-    private $itens;
+  
     public function getId(): ?int
     {
         return $this->id;
@@ -49,14 +48,4 @@ class Lista
         return $this;
     }
 
-    public function getItens()
-    {
-        return $this->itens;
-    }
-
-    public function addItem(Item $item): self
-    {
-        $this->itens[] = $item;
-        return $this;
-    }
 }

@@ -29,7 +29,7 @@ class Usuario
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $dataAtualizacao;
 
-    // Relacionamento: um usuário pode ter várias listas
+   
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Lista::class)]
     private $listas;
 
