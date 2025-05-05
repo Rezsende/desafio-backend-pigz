@@ -53,4 +53,23 @@ final class ItemController extends AbstractController
             ]
         ], 201);
     }
+
+    #[Route('/api/items/{id}', name: 'delete_item', methods: ['DELETE'])]
+    public function deleteItem(int $id, EntityManagerInterface $em): JsonResponse
+    {
+      
+        $item = $em->getRepository(Item::class)->find($id);
+
+       
+        if (!$item) {
+            return new JsonResponse(['erro' => 'Item não encontrado.'], 404);
+        }
+
+        
+        $em->remove($item);
+        $em->flush();
+
+       
+        return new JsonResponse(['mensagem' => 'Item excluído com sucesso.'], 200);
+    }
 }
